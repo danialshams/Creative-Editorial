@@ -1,13 +1,14 @@
-# آتریوم · ATRIUM — Creative Editorial Storefront
+# HORÉL — Mechanical watch atelier concept
 
-A Persian RTL interactive home decor storefront built with **Next.js 16.4**, React 19 and strict TypeScript.
+A premium Persian RTL cinematic horology **concept storefront** built with Next.js 16, React 19, TypeScript and GSAP / ScrollTrigger.
 
-## Design
-- Editorial visual language: warm ivory canvas, olive typography, large poetic headline, product still-life illustrations and subtle reveal motion.
-- Full RTL layout across mobile/tablet/desktop, reduced-motion support, accessible focus outlines, semantic controls.
-- Landing page, category discovery, product listings, search/sort, detailed product view, local cart persistence, visual hotspots.
+## Experience
+- Oversized custom SVG mechanical wristwatch with detailed indices, dial, glass reflection, visible moving gears and metallic case.
+- Cinematic hero reveal, scroll-linked workshop movement, editorial collection, keyboard-accessible watch detail and demo cart drawers.
+- Full Persian RTL, accessible buttons, escape-to-close dialogs, reduced-motion support, responsive layout from 320px upward.
+- Palette: ink `#0B1110`, forest `#172520`, champagne `#B8A783`, ivory `#F1EDE4`.
 
-## Run
+## Setup
 ```bash
 npm install
 npm run check
@@ -15,11 +16,8 @@ npm run build
 npm run dev
 ```
 
-## Important demo limitations
-This is an **interactive product demo**. Products/prices and stock are sample data. Cart persists in the browser only (`localStorage`). **No user authentication, backend inventory, order persistence or payment gateway** is connected. The checkout intentionally tells the visitor it is a preview.
+## Important: demonstration only
+HORÉL is a fictional conceptual brand. Product specifications and prices are illustrative; the cart exists only in client memory. **There is no real ordering, payment, authentication, inventory or database.** The interface clearly labels its demo nature. The editorial macro image is credited to Lucas Santos / Unsplash; product renders are original SVG illustrations.
 
-## Design provenance
-Migrated from the earlier interactive `ATRIUM-live-preview.html` prototype. The original illustrated imagery is included as self-contained local SVG files in `public/images` (no external image dependency). The markup is rendered on the server by Next.js and interactive behavior is loaded after hydration from `public/atrium-app.js`. This keeps the approved prototype's visuals and interactions while providing a Next.js deployment foundation. For a later production release, migrate event handlers and domain state into typed React components and a real backend.
-
-## Deployment
-Push to `main`; GitHub Actions installs locked dependencies, runs tests, typecheck, audit and production build. Connect the repository to Vercel; main is production branch. Review the deployed site on mobile and desktop.
+## Quality
+GitHub Actions runs type checking, tests, and a Next.js production build on every push to `main` and every pull request.
