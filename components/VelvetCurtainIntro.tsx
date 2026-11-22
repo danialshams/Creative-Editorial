@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { createVelvetScene } from "./velvet-simulation";
 import "./VelvetCurtainIntro.css";
@@ -16,7 +16,7 @@ export default function VelvetCurtainIntro({ onRevealStart, onComplete }: Curtai
   const surface = useRef<HTMLCanvasElement>(null);
   const [hidden, setHidden] = useState(false);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const host = stage.current;
     const canvas = surface.current;
     if (!host || !canvas) return;
@@ -50,8 +50,9 @@ export default function VelvetCurtainIntro({ onRevealStart, onComplete }: Curtai
       host.classList.add("velvet-curtain--parting");
       tween = gsap.to(motion, {
         value: 1,
-        duration: 2.5,
-        ease: "power2.inOut",
+        // Slow, continuous silk-like pull without sharp acceleration near the midpoint.
+        duration: 4.0,
+        ease: "sine.inOut",
         onUpdate: () => cloth.setOpening(motion.value),
         onComplete: () => {
           cloth.setOpening(1);
@@ -95,7 +96,7 @@ export default function VelvetCurtainIntro({ onRevealStart, onComplete }: Curtai
       if (!started) begin();
       if (cloth.available && !cloth.isOffscreen()) host.classList.add("velvet-curtain--emergency");
       window.setTimeout(done, 1050);
-    }, 12000);
+    }, 16000);
 
     return () => {
       alive = false;
