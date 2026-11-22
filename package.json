@@ -23,5 +23,5 @@
     "@types/react-dom": "19.2.3",
     "typescript": "5.9.3"
   },
-  "engines": {"node": ">=22"}
+  "engines": {"node": "22.x"}
 }
