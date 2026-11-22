@@ -9,7 +9,8 @@
   z-index: 9999;
   height: 100dvh;
   width: 100%;
-  background: transparent;
+  /* Flat pre-hydration tone; never display the old striped fallback before WebGL. */
+  background: #241c17;
   overflow: hidden;
   pointer-events: all;
   touch-action: none;
@@ -27,6 +28,8 @@
 }
 /* SSR-safe fallback avoids a flash before WebGL creates its first frame. */
 .velvet-curtain__fallback {
+  /* Hidden until a genuine WebGL failure — no two different curtains at startup. */
+  display: none;
   position: absolute;
   inset: 0;
   z-index: 1;
@@ -42,12 +45,15 @@
     #241a14 57px 76px,#14110e 83px 93px);
   box-shadow: inset -11px 0 25px rgba(0,0,0,.32),
     inset 8px 0 18px rgba(188,151,109,.06);
-  transition: transform 2.5s cubic-bezier(.69,.02,.23,1);
+  transition: transform 4s cubic-bezier(.37,0,.63,1);
   will-change: transform;
 }
 .velvet-curtain__fallback span:first-child { left: 0; }
 .velvet-curtain__fallback span:last-child { right: 0; transform: scaleX(-1); }
-.velvet-curtain--webgl .velvet-curtain__fallback { display: none; }
+/* Once initialized, the homepage is visible through the transparent WebGL mesh. */
+.velvet-curtain--webgl,
+.velvet-curtain--fallback { background: transparent; }
+.velvet-curtain--fallback .velvet-curtain__fallback { display: block; }
 .velvet-curtain--fallback .velvet-curtain__canvas { display: none; }
 .velvet-curtain--parting .velvet-curtain__fallback span:first-child {
   transform: translateX(-103%);

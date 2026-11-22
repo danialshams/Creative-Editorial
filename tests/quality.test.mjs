@@ -53,6 +53,11 @@ test("Independent 3D WebGL velvet curtain opens with a safe exit", () => {
  assert.match(curtainCSS,/velvet-curtain--fallback/);
  assert.match(curtainCSS,/#bda27a/);
  assert.match(curtainCSS,/background: transparent/);
+ assert.match(curtain,/duration: 4\.0/);
+ assert.match(curtain,/sine\.inOut/);
+ assert.match(curtain,/useLayoutEffect/);
+ assert.match(curtainCSS,/\.velvet-curtain__fallback\s*\{[^}]*display:\s*none/s);
+ assert.match(curtainCSS,/\.velvet-curtain--fallback \.velvet-curtain__fallback \{ display: block; \}/);
  assert.doesNotMatch(curtainCSS,/velvet-curtain--released|velvet-curtain__valance/);
  assert.match(page,/onRevealStart=\{beginCurtainReveal\}/);
 });

@@ -6,6 +6,11 @@ test("curtains open directly onto the already-rendered homepage, with no black i
   const hero = page.locator(".hero-photo img");
 
   await expect(curtain).toBeAttached();
+  // The CSS-only curtain must not be visible on WebGL devices: only one curtain.
+  await expect.poll(async () => curtain.evaluate(el => el.classList.contains("velvet-curtain--webgl") || el.classList.contains("velvet-curtain--fallback"))).toBe(true);
+  if (await curtain.evaluate(el => el.classList.contains("velvet-curtain--webgl"))) {
+    await expect(curtain.locator(".velvet-curtain__fallback")).toBeHidden();
+  }
   await expect(hero).toBeAttached();
   expect(await curtain.evaluate(element => getComputedStyle(element).backgroundColor))
     .toBe("rgba(0, 0, 0, 0)");
@@ -19,7 +24,7 @@ test("curtains open directly onto the already-rendered homepage, with no black i
   ).toBeGreaterThan(0);
 
   // The curtain remains over the hero until physically outside the viewport.
-  await expect(curtain).toHaveCount(0, { timeout: 14500 });
+  await expect(curtain).toHaveCount(0, { timeout: 20000 });
   await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
   await expect(page.locator(".hero-photo img")).toBeVisible();
 });
