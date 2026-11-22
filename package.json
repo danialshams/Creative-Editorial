@@ -1,6 +1,6 @@
 {
-  "name": "maison-noor",
-  "version": "1.0.0",
+  "name": "maison-noor-italian-noir",
+  "version": "2.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -23,5 +23,7 @@
     "@types/react-dom": "19.2.3",
     "typescript": "5.9.3"
   },
-  "engines": {"node": "22.x"}
+  "engines": {
+    "node": "22.x"
+  }
 }

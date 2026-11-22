@@ -1,15 +1,27 @@
-# MAISON NOOR / میزونور
+# MAISON NOOR — Italian Noir
 
-A deliberately minimal, cinematic home-decor storefront concept built in Next.js App Router, React, GSAP and ScrollTrigger. Persian RTL, responsive, keyboard-accessible and performance-aware. Art direction: warm ivory `#F7F4ED`, olive `#59614B`, charcoal `#25251F`.
+Luxury, photographic, Persian RTL interior editorial commerce concept built using Next.js 16, TypeScript and GSAP ScrollTrigger.
 
-## Design language
-The images were generated specifically for this concept, and then converted to **transparent cutout WebP** files. The background is rendered by the site's own CSS, avoiding a separate product-image backdrop. Each object retains a soft natural contact shadow. The first viewport is intentionally spacious. The loader reveals the page only after a restrained, short branded sequence and can be skipped on repeat visits or for reduced-motion preferences.
+## Design direction
+* **Italian Noir:** dark charcoal, walnut, restrained champagne gold and cream.
+* Large licensed real photography; each editorial image is different.
+* Three photographic reveals: architectural vertical mask, asymmetrical arch and radial crescent cut.
+* Premium brand intro: timed curtain opening with reduced-motion and reliable unlock.
+* GSAP hero typography, progressive scroll reveals, subtle image parallax and reverse-safe cleanup.
+* Real interactive filters, search, product detail modal, favorites, and client-persisted demo cart.
+* Accessible overlays, keyboard Escape, semantic landmarks, portrait layouts, 320px+ responsive styling.
 
-## Development
-`npm install && npm run check && npm run build && npm run dev`
+## Commands
+- npm install
+- npm run dev
+- npm run check
+- npm run build
 
-## Demo notice
-All products and prices are **illustrative**. Cart and favorites persist in localStorage only. Product dialogs, search, category filters, mobile menu and the cart drawer are interactive; checkout shows an explicit unavailable notice. There is no inventory database, order-processing backend, user account, or payment gateway. No claims of real stock or checkout completion.
+## Photos and provenance
+The site uses **genuine Unsplash photographs**, not AI-generated product art. Links directly reference different photograph IDs licensed under https://unsplash.com/license. The photos are displayed as editorial inspiration and **are not the actual photographed SKUs on sale**. Source files are remote Unsplash CDN assets, sized using photo query parameters. For commercial launch replace all conceptual sample photos, descriptions, prices, and product mapping with licensed brand-owned photography and real catalog data.
 
-## Source
-The original reference was an approved Maison Noor minimal cutout Figma concept. Product images were created as project-specific visual assets. No existing ATRIUM or HORÉL product files remain in this source tree.
+## Scope
+**Demo-only** commerce UX: no database, checkout/payment, order submission, or newsletter backend. Cart is stored locally on the client and must not be construed as a transaction.
+
+## Release
+GitHub Actions verifies structural quality checks, TypeScript, and builds on main. Vercel deploys the connected repository on main. Functional browser testing and image loading should be checked separately, since a successful build cannot establish visual quality alone.
