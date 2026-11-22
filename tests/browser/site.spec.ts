@@ -16,8 +16,16 @@ test("RTL page, curtain exit, local image loading, and responsive layout", async
     await page.waitForTimeout(230);
   }
   await page.waitForTimeout(700);
-  const invalid = await page.locator("img").evaluateAll(imgs => (imgs as HTMLImageElement[])
-    .filter(img => !img.complete || img.naturalWidth === 0)
+  const imageElements = page.locator("img");
+  for (let index = 0; index < await imageElements.count(); index++) {
+    const image = imageElements.nth(index);
+    if (await image.isVisible()) {
+      await image.scrollIntoViewIfNeeded();
+      await expect.poll(async () => image.evaluate(element => (element as HTMLImageElement).naturalWidth), { timeout: 8_000 }).toBeGreaterThan(0);
+    }
+  }
+  const invalid = await imageElements.evaluateAll(imgs => (imgs as HTMLImageElement[])
+    .filter(img => img.getClientRects().length > 0 && (!img.complete || img.naturalWidth === 0))
     .map(img => ({ src: img.getAttribute("src"), complete: img.complete, width: img.naturalWidth })));
   expect(invalid, "All local editorial photography should decode successfully").toEqual([]);
   const sources = await page.locator("img").evaluateAll(imgs => imgs.map(img => img.getAttribute("src") || ""));
@@ -38,7 +46,7 @@ test("Search, product modal and demo cart are interactive", async ({ page }) => 
   await page.getByRole("button", { name: "جست‌وجو" }).click();
   await expect(page.getByRole("dialog", { name: "جست‌وجو" })).toBeVisible();
   await page.getByRole("textbox", { name: "نام محصول، متریال یا دسته را جست‌وجو کنید" }).fill("صندلی");
-  await page.getByRole("button", { name: /صندلی چوبی کیارو/ }).first().click();
+  await page.getByRole("dialog", { name: "جست‌وجو" }).getByRole("button", { name: /صندلی چوبی کیارو/ }).click();
   await expect(page.getByRole("dialog", { name: /صندلی چوبی کیارو/ })).toBeVisible();
   await page.getByRole("button", { name: /افزودن به سبد نمایشی/ }).click();
   await expect(page.getByRole("dialog", { name: "سبد خرید" })).toBeVisible();
