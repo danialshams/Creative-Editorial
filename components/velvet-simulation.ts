@@ -8,6 +8,7 @@ export type VelvetScene = {
   setOpening(amount: number): void;
   dispose(): void;
   readonly available: boolean;
+  isOffscreen(): boolean;
 };
 
 const X = 30;
@@ -54,12 +55,8 @@ void main() {
   vec3 pigment = mix(foldColor, clothColor, 0.23 + lit * 0.81);
   pigment += glowColor * (sheen * 0.62 + spec * 0.12);
   pigment *= 0.92 + noise(gl_FragCoord.xy) * 0.075 + longitudinal;
-  float braid = smoothstep(0.960, 0.968, tex.y);
-  float strand = 0.78 + 0.22 * cos(tex.x * 118.0 + sin(tex.y * 190.0));
-  vec3 borderColor = trimColor * (0.45 + 0.65 * lit) * strand;
-  pigment = mix(pigment, borderColor, braid);
-  float ragged = tex.y > 0.99 ? step(0.18, noise(vec2(floor(tex.x * 170.0), 8.0))) : 1.0;
-  gl_FragColor = vec4(pigment, ragged);
+  // Only the matte velvet nap: no braid, stage trim, gold fringe or pelmet.
+  gl_FragColor = vec4(pigment, 1.0);
 }
 `;
 
@@ -150,7 +147,7 @@ export function createVelvetScene(canvas: HTMLCanvasElement): VelvetScene {
 
   try { gl = canvas.getContext('webgl', { alpha: true, antialias: true, premultipliedAlpha: false }); }
   catch { gl = null; }
-  if (!gl) return { available: false, setOpening() {}, dispose() {} };
+  if (!gl) return { available: false, setOpening() {}, isOffscreen() { return true; }, dispose() {} };
   const ctx = gl;
 
   try {
@@ -166,7 +163,7 @@ export function createVelvetScene(canvas: HTMLCanvasElement): VelvetScene {
     ctx.useProgram(program);
   } catch {
     if (program) ctx.deleteProgram(program);
-    return { available: false, setOpening() {}, dispose() {} };
+    return { available: false, setOpening() {}, isOffscreen() { return true; }, dispose() {} };
   }
 
   const positionLoc = ctx.getAttribLocation(program, 'position');
@@ -247,17 +244,18 @@ export function createVelvetScene(canvas: HTMLCanvasElement): VelvetScene {
 
   function physics(dt: number, breeze = true) {
     elapsed += dt;
-    const gather = ease(limit(opening / 0.93, 0, 1));
-    const tie = ease(limit((opening - 0.17) / 0.82, 0, 1));
+    // The curtain travels PAST the viewport edges instead of collapsing in a visible bunch.
+    // Rails stay virtual: their hooks move offstage with their fabric.
+    const gather = ease(limit(opening / 0.985, 0, 1));
     const colLength = width * 0.52 / (X - 1);
     const foldHeight = colLength * 2.5;
 
     for (const piece of vertices) {
       const { current: a, previous: b } = piece;
       const sign = piece.side === -1 ? 1 : -1;
-      const wall = piece.side === -1 ? 0 : width;
+      const travel = width * 0.34 * gather;
+      const wall = (piece.side === -1 ? 0 : width) - sign * travel;
       const spread = width * 0.515 * (1 - gather * 0.80);
-      const freeEdge = piece.side === -1 ? width * 0.105 : width * 0.895;
 
       for (let y = 1; y < Y; y++) for (let x = 0; x < X; x++) {
         const p = point(y, x);
@@ -269,12 +267,19 @@ export function createVelvetScene(canvas: HTMLCanvasElement): VelvetScene {
         const influence = pointer.on && distance < width * 0.18
           ? (1 - distance / (width * 0.18)) ** 2 * low
           : 0;
+        const t = x / (X - 1);
+        const desiredX = wall + sign * t * spread;
+        // Gentle rail-follow force lets the hem lag while eventually carrying ALL fabric offscreen.
+        const follow = 0.052 + (1 - low) * 0.018;
         a[p] += (ox - b[p]) * inertia + drift
-          + influence * (pointer.dx * 0.016 + Math.sin(elapsed * 6 + y * 0.36) * 0.18);
+          + influence * (pointer.dx * 0.016 + Math.sin(elapsed * 6 + y * 0.36) * 0.18)
+          + (desiredX - ox) * follow;
         a[p + 1] += (oy - b[p + 1]) * inertia + 1400 * dt * dt;
+        const desiredFold = folds[x] * foldHeight * (0.92 + gather * 1.38);
         a[p + 2] += (oz - b[p + 2]) * inertia
           + (breeze ? Math.sin(elapsed * 1.1 + x * 0.27) * 0.024 * low : 0)
-          + influence * (0.18 + Math.abs(pointer.dx) * 0.008);
+          + influence * (0.18 + Math.abs(pointer.dx) * 0.008)
+          + (desiredFold - oz) * 0.028;
         b[p] = ox; b[p + 1] = oy; b[p + 2] = oz;
       }
 
@@ -309,19 +314,6 @@ export function createVelvetScene(canvas: HTMLCanvasElement): VelvetScene {
           a[j + 1] -= dy * (u >= X ? 0.5 : 1);
           a[j + 2] -= dz * (u >= X ? 0.5 : 1);
         }
-        if (tie > 0) {
-          // A velvet tie gathers the middle of the fabric but lets the hem hang.
-          const y = Math.floor(Y * 0.54);
-          const knotX = wall + sign * width * 0.095;
-          const knotY = height * 0.53;
-          for (let x = 0; x < X; x++) {
-            const p = point(y, x);
-            const crease = (x / (X - 1) - 0.5) * width * 0.025;
-            const drive = 0.065 * tie;
-            a[p] += (knotX + crease * sign - a[p]) * drive;
-            a[p + 1] += (knotY + Math.abs(crease) * 0.6 - a[p + 1]) * drive;
-          }
-        }
         // Bottom hem rests on the floor instead of escaping below the viewport.
         for (let x = 0; x < X; x++) {
           const p = point(Y - 1, x);
@@ -331,13 +323,6 @@ export function createVelvetScene(canvas: HTMLCanvasElement): VelvetScene {
           }
         }
         clampRail();
-      }
-      // Keep the free inner edge from floating across the entire set.
-      for (let y = 1; y < Y; y++) {
-        const p = point(y, X - 1);
-        if (gather > 0.97) {
-          a[p] += (freeEdge - a[p]) * 0.03 * (1 - y / Y);
-        }
       }
     }
   }
@@ -410,6 +395,17 @@ export function createVelvetScene(canvas: HTMLCanvasElement): VelvetScene {
   return {
     available: true,
     setOpening(amount: number) { target = limit(amount, 0, 1); },
+    // The overlay may unmount ONLY after the two meshes have fully passed the viewport.
+    isOffscreen() {
+      if (target < 0.999 || opening < 0.995) return false;
+      for (const part of vertices) {
+        for (let i = 0; i < DIM; i += CELL) {
+          const x = part.current[i];
+          if (part.side === -1 ? x >= -3 : x <= width + 3) return false;
+        }
+      }
+      return true;
+    },
     dispose() {
       discarded = true;
       cancelAnimationFrame(animation);

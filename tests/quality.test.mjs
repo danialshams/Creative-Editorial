@@ -36,15 +36,25 @@ test("Independent 3D WebGL velvet curtain opens with a safe exit", () => {
  assert.doesNotMatch(page,/PhysicsCurtain/);
  assert.match(curtain,/createVelvetScene/);
  assert.match(curtain,/onComplete/);
- assert.match(curtain,/4850/);
+ assert.match(curtain,/isOffscreen/);
+ assert.match(curtain,/onRevealStart/);
+ assert.match(curtain,/heroReady/);
+ assert.match(curtain,/hero\.decode/);
+ assert.doesNotMatch(curtain,/__backdrop|__valance|__rail|__cord|__identity/);
  assert.match(curtain,/prefers-reduced-motion/);
  assert.match(simulation,/Verlet/);
  assert.match(simulation,/WebGL/);
  assert.match(simulation,/gravity|GRAVITY|1400 \* dt \* dt/i);
  assert.match(simulation,/clampRail/);
- assert.match(simulation,/knotX/);
+ assert.doesNotMatch(simulation,/knotX|knotY|const tie =/);
+ assert.match(simulation,/isOffscreen\(\)/);
+ assert.match(simulation,/x >= -3/);
+ assert.match(simulation,/x <= width \+ 3/);
  assert.match(curtainCSS,/velvet-curtain--fallback/);
  assert.match(curtainCSS,/#bda27a/);
+ assert.match(curtainCSS,/background: transparent/);
+ assert.doesNotMatch(curtainCSS,/velvet-curtain--released|velvet-curtain__valance/);
+ assert.match(page,/onRevealStart=\{beginCurtainReveal\}/);
 });
 
 test("Balanced restrained photographic masks, not every image shaped", () => {

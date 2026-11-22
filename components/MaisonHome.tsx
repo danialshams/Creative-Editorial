@@ -85,6 +85,8 @@ export default function MaisonHome() {
   }, [prefersLessMotion]);
 
   const finishCurtain = useCallback(() => setIntro("ready"), []);
+  const beginCurtainReveal = useCallback(() => setIntro("revealing"), []);
+  const isHeroRevealing = intro !== "loading";
 
   useEffect(() => {
     const locked = intro !== "ready" || overlay !== "none" || selected !== null;
@@ -94,7 +96,7 @@ export default function MaisonHome() {
   }, [intro, overlay, selected]);
 
   useEffect(() => {
-    if (intro !== "ready" || !rootRef.current || prefersLessMotion()) return;
+    if (!isHeroRevealing || !rootRef.current || prefersLessMotion()) return;
     gsap.registerPlugin(ScrollTrigger);
     const context = gsap.context(() => {
       gsap.fromTo("[data-hero-title]", { yPercent: 110 }, { yPercent: 0, duration: 1.26, ease: "power4.out", stagger: 0.11, clearProps: "transform" });
@@ -129,6 +131,12 @@ export default function MaisonHome() {
     }, rootRef);
     const refresh = window.setTimeout(() => ScrollTrigger.refresh(), 750);
     return () => { window.clearTimeout(refresh); context.revert(); };
+  }, [isHeroRevealing, prefersLessMotion]);
+
+  useEffect(() => {
+    if (intro !== "ready" || prefersLessMotion()) return;
+    const id = window.setTimeout(() => ScrollTrigger.refresh(), 85);
+    return () => window.clearTimeout(id);
   }, [intro, prefersLessMotion]);
 
   useEffect(() => {
@@ -207,7 +215,7 @@ export default function MaisonHome() {
 
   return (
     <div ref={rootRef} className="site-root">
-      {intro !== "ready" && <VelvetCurtainIntro onComplete={finishCurtain} />}
+      {intro !== "ready" && <VelvetCurtainIntro onRevealStart={beginCurtainReveal} onComplete={finishCurtain} />}
 
       <div className="page-wrap">
         <header className={"site-header" + (navScrolled ? " site-header--solid" : "")}>
