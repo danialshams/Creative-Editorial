@@ -272,11 +272,11 @@ export default function MaisonHome() {
                 <div><h2 id="collections-title">زیبایی، در انتخاب‌های دقیق است.</h2><p>مجموعه‌ای برای لحظه‌هایی که خانه به آرامش تبدیل می‌شود.</p></div>
               </div>
               <div className="collections-composition">
-                <article className="collection-major" data-reveal>
+                <article className="collection-major" data-reveal data-parallax>
                   <EditorialImage src={images.collectionOne} alt="نشیمن واقعی با مبلمان گرم و دکوراسیون بافت‌دار" className="collection-photo" sizes="(max-width: 900px) 100vw, 58vw" position="center 55%"/>
                   <div className="collection-caption"><span>01 / THE RESIDENCE</span><h3>زندگی در قابِ سکوت</h3><button type="button" onClick={() => visit("spaces")} aria-label="مشاهده فضاهای خانه">مشاهده فضاها <ArrowUpLeft size={18}/></button></div>
                 </article>
-                <article className="collection-minor" data-reveal>
+                <article className="collection-minor" data-reveal data-parallax>
                   <EditorialImage src={images.collectionTwo} alt="مبل چرمی قهوه‌ای کنار میز چوبی در یک فضای صنعتی واقعی" className="collection-photo arch-cut" sizes="(max-width: 900px) 100vw, 36vw"/>
                   <div className="collection-caption"><span>02 / OBJECTS OF DESIRE</span><h3>برای لمسِ ماندگاری</h3><button type="button" onClick={() => visit("objects")}>مشاهده منتخب‌ها <ArrowUpLeft size={18}/></button></div>
                 </article>
