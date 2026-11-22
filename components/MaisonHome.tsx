@@ -6,6 +6,7 @@ import { ArrowDownLeft, ArrowLeft, ArrowUpLeft, Check, ChevronLeft, Heart, Menu,
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { images, products, toMoney, type Product, type ProductCategory } from "../data/catalog";
+import PhysicsCurtain from "./PhysicsCurtain";
 
 type IntroState = "loading" | "revealing" | "ready";
 type Overlay = "none" | "search" | "cart" | "menu";
@@ -80,32 +81,10 @@ export default function MaisonHome() {
   ), []);
 
   useEffect(() => {
-    if (prefersLessMotion()) {
-      setIntro("ready");
-      return;
-    }
-    let settled = false;
-    const finishIntro = () => {
-      if (!settled) {
-        settled = true;
-        setIntro("ready");
-      }
-    };
-    const safetyTimeout = window.setTimeout(finishIntro, 4200);
-    const opening = gsap.timeline({ onComplete: finishIntro });
-    opening
-      .set(".intro-shade--left", { xPercent: 0 })
-      .set(".intro-shade--right", { xPercent: 0 })
-      .fromTo(".intro-rule span", { scaleX: 0 }, { scaleX: 1, duration: 1.1, ease: "power2.out" }, 0)
-      .to(".intro-center", { autoAlpha: 0, y: -24, duration: 0.55, ease: "power2.inOut" }, 1.06)
-      .to(".intro-seam", { autoAlpha: 0, duration: 0.35 }, 1.17)
-      .to(".intro-shade--left", { xPercent: -103, duration: 1.58, ease: "power4.inOut" }, 1.28)
-      .to(".intro-shade--right", { xPercent: 103, duration: 1.58, ease: "power4.inOut" }, 1.28);
-    return () => {
-      window.clearTimeout(safetyTimeout);
-      opening.kill();
-    };
+    if (prefersLessMotion()) setIntro("ready");
   }, [prefersLessMotion]);
+
+  const finishCurtain = useCallback(() => setIntro("ready"), []);
 
   useEffect(() => {
     const locked = intro !== "ready" || overlay !== "none" || selected !== null;
@@ -228,17 +207,7 @@ export default function MaisonHome() {
 
   return (
     <div ref={rootRef} className="site-root">
-      <div aria-hidden={intro === "ready"} className={"intro intro--" + intro}>
-        <div className="intro-shade intro-shade--left" />
-        <div className="intro-shade intro-shade--right" />
-        <div className="intro-seam" />
-        <div className="intro-center">
-          <div className="intro-monogram"><span>M</span><i /><span>N</span></div>
-          <div className="intro-wordmark">MAISON NOOR</div>
-          <span className="intro-caption">AN INTERIOR ATELIER</span>
-          <span className="intro-rule"><span /></span>
-        </div>
-      </div>
+      {intro !== "ready" && <PhysicsCurtain onFinished={finishCurtain} />}
 
       <div className="page-wrap">
         <header className={"site-header" + (navScrolled ? " site-header--solid" : "")}>

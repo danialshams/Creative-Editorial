@@ -28,14 +28,18 @@ test("All bespoke visual assets exist as local WebP with unique paths", () => {
  }
  assert.doesNotMatch(data,/https?:\/\/|unsplash|sourceImage/);
 });
-test("Luxury fabric curtains open from middle with a GSAP sequence", () => {
- assert.match(page,/intro-shade--left/);
- assert.match(page,/intro-shade--right/);
- assert.match(page,/xPercent: -103/);
- assert.match(page,/xPercent: 103/);
- assert.match(css,/intro-seam/);
- assert.match(page,/safetyTimeout/);
+test("Spring-physics velvet curtains open from the centre with a safe fallback", () => {
+ const curtain = readFileSync("components/PhysicsCurtain.tsx", "utf8");
+ assert.match(page,/PhysicsCurtain/);
+ assert.match(curtain,/oldX|point\.px/);
+ assert.match(curtain,/const spring/);
+ assert.match(curtain,/drawCloth/);
+ assert.match(curtain,/requestAnimationFrame/);
+ assert.match(curtain,/progress: 1/);
+ assert.match(curtain,/6500/);
+ assert.match(css,/physics-curtain--painted/);
 });
+
 test("Balanced restrained photographic masks, not every image shaped", () => {
  assert.match(page,/arch-cut/);
  assert.match(page,/crescent-cut/);

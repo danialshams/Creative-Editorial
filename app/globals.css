@@ -288,3 +288,21 @@ img{display:block}
 }
 @media(max-width:400px){.hero-title{font-size:clamp(57px,14.2vw,70px)}.product-card:nth-child(even){padding-top:23px}}
 @media(prefers-reduced-motion:reduce){.intro{display:none!important}.intro-shade{will-change:auto}.product-card:nth-child(even){padding-top:0}}
+
+
+/* Silk curtain rendered as deforming strips with Verlet-style spring physics. */
+.physics-curtain{position:fixed;inset:0;z-index:2000;overflow:hidden;pointer-events:auto;isolation:isolate;background:#211b18}
+.physics-curtain__fallback{position:absolute;inset:0;background:linear-gradient(90deg,#2c211d,#4d3628 47%,#3d2a21 53%,#251c18);z-index:0}
+.physics-curtain--painted{background:transparent}
+.physics-curtain--painted .physics-curtain__fallback{display:none}
+.physics-curtain canvas{position:absolute;inset:0;z-index:1;width:100%;height:100%;display:block}
+.physics-curtain__identity{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:3;display:flex;align-items:center;flex-direction:column;gap:12px;white-space:nowrap;text-shadow:0 2px 17px rgba(0,0,0,.53);direction:ltr;pointer-events:none}
+.physics-curtain__emblem{font:400 clamp(43px,5vw,73px)/1 Georgia,"Times New Roman",serif;letter-spacing:.05em;color:#eee2d1}
+.physics-curtain__emblem>span{font-size:17px;vertical-align:middle;padding-inline:18px;color:#cfad7d}
+.physics-curtain__brand{font:400 clamp(16px,2.2vw,25px)/1.4 Georgia,"Times New Roman",serif;letter-spacing:.32em;color:#f6eee1;padding-left:.32em}
+.physics-curtain__caption{font:400 10px/1.4 Georgia,serif;letter-spacing:.39em;color:#d6ae7d;padding-left:.39em}
+.physics-curtain__line{height:1px;width:170px;background:rgba(229,190,138,.27);overflow:hidden;margin-top:23px}
+.physics-curtain__line i{display:block;height:100%;background:#d6b17d;transform-origin:left;animation:curtain-loader-fill 1.13s cubic-bezier(.3,0,.2,1) both}
+@keyframes curtain-loader-fill{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@media(max-width:680px){.physics-curtain__brand{font-size:17px;letter-spacing:.22em}.physics-curtain__caption{font-size:8px}.physics-curtain__emblem{font-size:50px}}
+@media(prefers-reduced-motion:reduce){.physics-curtain{display:none!important}}
