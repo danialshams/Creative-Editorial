@@ -16,7 +16,7 @@ test("RTL page, curtain exit, local image loading, and responsive layout", async
     await page.waitForTimeout(230);
   }
   await page.waitForTimeout(700);
-  const invalid = await page.locator("img").evaluateAll(imgs => imgs
+  const invalid = await page.locator("img").evaluateAll(imgs => (imgs as HTMLImageElement[])
     .filter(img => !img.complete || img.naturalWidth === 0)
     .map(img => ({ src: img.getAttribute("src"), complete: img.complete, width: img.naturalWidth })));
   expect(invalid, "All local editorial photography should decode successfully").toEqual([]);
