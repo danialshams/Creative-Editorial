@@ -1,0 +1,1 @@
+export default function NotFound(){return <main dir="rtl" style={{minHeight:"70vh",display:"grid",placeItems:"center",padding:32,textAlign:"center"}}><div><h1>صفحه پیدا نشد</h1><p>این آدرس در نسخه نمایشی آتریوم وجود ندارد.</p><a href="/" style={{textDecoration:"underline"}}>بازگشت به صفحه اصلی</a></div></main>}
