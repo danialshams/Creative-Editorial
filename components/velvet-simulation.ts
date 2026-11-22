@@ -55,8 +55,20 @@ void main() {
   vec3 pigment = mix(foldColor, clothColor, 0.23 + lit * 0.81);
   pigment += glowColor * (sheen * 0.62 + spec * 0.12);
   pigment *= 0.92 + noise(gl_FragCoord.xy) * 0.075 + longitudinal;
-  // Only the matte velvet nap: no braid, stage trim, gold fringe or pelmet.
-  gl_FragColor = vec4(pigment, 1.0);
+
+  // A woven champagne-gold hem follows the SAME physical cloth mesh.
+  // Lit pleats become bright, recessed folds stay dark; it is not a flat overlay.
+  float hem = smoothstep(0.931, 0.967, tex.y);
+  float goldThread = 0.89 + 0.11 * cos(tex.x * 290.0 + tex.y * 25.0);
+  float pleatGlint = 0.68 + 0.47 * lit + 0.10 * spec;
+  vec3 goldHem = trimColor * goldThread * pleatGlint;
+  pigment = mix(pigment, goldHem, hem);
+
+  // An irregularly scalloped fringe, present only along the very bottom edge.
+  // Gold tassels are cut from the material instead of being a separate rigid bar.
+  float tasselTip = 0.989 + 0.010 * (0.5 + 0.5 * sin(tex.x * 255.0));
+  float fringeAlpha = 1.0 - smoothstep(tasselTip - 0.0015, tasselTip + 0.0015, tex.y);
+  gl_FragColor = vec4(pigment, fringeAlpha);
 }
 `;
 
@@ -253,6 +265,8 @@ export function createVelvetScene(canvas: HTMLCanvasElement): VelvetScene {
     for (const piece of vertices) {
       const { current: a, previous: b } = piece;
       const sign = piece.side === -1 ? 1 : -1;
+      // The upper edge follows the virtual rail first. Each lower row receives
+      // a delayed target, so the weight of the fabric cascades from TOP to HEM.
       const travel = width * 0.34 * gather;
       const wall = (piece.side === -1 ? 0 : width) - sign * travel;
       const spread = width * 0.515 * (1 - gather * 0.80);
@@ -268,14 +282,20 @@ export function createVelvetScene(canvas: HTMLCanvasElement): VelvetScene {
           ? (1 - distance / (width * 0.18)) ** 2 * low
           : 0;
         const t = x / (X - 1);
-        const desiredX = wall + sign * t * spread;
-        // Gentle rail-follow force lets the hem lag while eventually carrying ALL fabric offscreen.
-        const follow = 0.052 + (1 - low) * 0.018;
+        // Upper folds begin immediately. The heavier bottom hem trails with a
+        // visibly delayed, continuous wave, never teleporting or snapping.
+        const rowDelay = 0.38 * low * low;
+        const rowGather = ease(limit((opening - rowDelay) / (0.985 - rowDelay), 0, 1));
+        const rowTravel = width * 0.34 * rowGather;
+        const rowWall = (piece.side === -1 ? 0 : width) - sign * rowTravel;
+        const rowSpread = width * 0.515 * (1 - rowGather * 0.80);
+        const desiredX = rowWall + sign * t * rowSpread;
+        const follow = 0.051 + (1 - low) * 0.019;
         a[p] += (ox - b[p]) * inertia + drift
           + influence * (pointer.dx * 0.016 + Math.sin(elapsed * 6 + y * 0.36) * 0.18)
           + (desiredX - ox) * follow;
         a[p + 1] += (oy - b[p + 1]) * inertia + 1400 * dt * dt;
-        const desiredFold = folds[x] * foldHeight * (0.92 + gather * 1.38);
+        const desiredFold = folds[x] * foldHeight * (0.92 + rowGather * 1.38);
         a[p + 2] += (oz - b[p + 2]) * inertia
           + (breeze ? Math.sin(elapsed * 1.1 + x * 0.27) * 0.024 * low : 0)
           + influence * (0.18 + Math.abs(pointer.dx) * 0.008)
