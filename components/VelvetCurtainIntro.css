@@ -45,21 +45,53 @@
     #241a14 57px 76px,#14110e 83px 93px);
   box-shadow: inset -11px 0 25px rgba(0,0,0,.32),
     inset 8px 0 18px rgba(188,151,109,.06);
-  transition: transform 4s cubic-bezier(.37,0,.63,1);
+  transition: none;
   will-change: transform;
 }
-.velvet-curtain__fallback span:first-child { left: 0; }
-.velvet-curtain__fallback span:last-child { right: 0; transform: scaleX(-1); }
+.velvet-curtain__fallback span::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 6.5%;
+  background:
+    repeating-linear-gradient(90deg,
+      rgba(38,26,13,.22) 0px,
+      rgba(255,226,161,.11) 3px,
+      rgba(40,26,12,.25) 8px),
+    linear-gradient(to bottom, #51402b 0%, #bda27a 46%, #806340 100%);
+  clip-path: polygon(
+    0 0,100% 0,100% 82%,95% 100%,90% 82%,85% 100%,
+    80% 82%,75% 100%,70% 82%,65% 100%,60% 82%,55% 100%,
+    50% 82%,45% 100%,40% 82%,35% 100%,30% 82%,25% 100%,
+    20% 82%,15% 100%,10% 82%,5% 100%,0 82%);
+}
+.velvet-curtain__fallback span:first-child { left: 0; transform-origin: top left; }
+.velvet-curtain__fallback span:last-child { right: 0; transform: scaleX(-1); transform-origin: top right; }
 /* Once initialized, the homepage is visible through the transparent WebGL mesh. */
 .velvet-curtain--webgl,
 .velvet-curtain--fallback { background: transparent; }
 .velvet-curtain--fallback .velvet-curtain__fallback { display: block; }
 .velvet-curtain--fallback .velvet-curtain__canvas { display: none; }
+/* Fallback honors the top-first visual sequence if WebGL is unavailable. */
+@keyframes left-curtain-top-first {
+  0%   { transform: translateX(0) skewX(0deg); }
+  28%  { transform: translateX(-12%) skewX(10deg); }
+  65%  { transform: translateX(-59%) skewX(7deg); }
+  100% { transform: translateX(-112%) skewX(0deg); }
+}
+@keyframes right-curtain-top-first {
+  0%   { transform: translateX(0) scaleX(-1) skewX(0deg); }
+  28%  { transform: translateX(12%) scaleX(-1) skewX(10deg); }
+  65%  { transform: translateX(59%) scaleX(-1) skewX(7deg); }
+  100% { transform: translateX(112%) scaleX(-1) skewX(0deg); }
+}
 .velvet-curtain--parting .velvet-curtain__fallback span:first-child {
-  transform: translateX(-103%);
+  animation: left-curtain-top-first 5.6s cubic-bezier(.37,0,.63,1) forwards;
 }
 .velvet-curtain--parting .velvet-curtain__fallback span:last-child {
-  transform: translateX(103%) scaleX(-1);
+  animation: right-curtain-top-first 5.6s cubic-bezier(.37,0,.63,1) forwards;
 }
 /* Used only as GPU failure recovery. Normal completion never hides the fabric prematurely. */
 .velvet-curtain--emergency .velvet-curtain__canvas {
