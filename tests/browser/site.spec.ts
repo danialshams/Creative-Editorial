@@ -4,7 +4,7 @@ test("RTL page, curtain exit, local image loading, and responsive layout", async
   const jsErrors: string[] = [];
   page.on("pageerror", error => jsErrors.push(error.message));
   await page.goto("/", { waitUntil: "domcontentloaded" });
-  await expect(page.locator(".intro")).toBeHidden({ timeout: 12_000 });
+  await expect(page.locator(".physics-curtain")).toBeHidden({ timeout: 12_000 });
   await expect(page.getByRole("heading", { level: 1, name: /هنرِ/ })).toBeVisible();
   const dir = await page.locator("html").getAttribute("dir");
   expect(dir).toBe("rtl");
@@ -42,7 +42,7 @@ test("RTL page, curtain exit, local image loading, and responsive layout", async
 
 test("Search, product modal and demo cart are interactive", async ({ page }) => {
   await page.goto("/");
-  await expect(page.locator(".intro")).toBeHidden({ timeout: 12_000 });
+  await expect(page.locator(".physics-curtain")).toBeHidden({ timeout: 12_000 });
   await page.getByRole("button", { name: "جست‌وجو" }).click();
   await expect(page.getByRole("dialog", { name: "جست‌وجو" })).toBeVisible();
   await page.getByRole("textbox", { name: "نام محصول، متریال یا دسته را جست‌وجو کنید" }).fill("صندلی");
@@ -58,9 +58,23 @@ test("Search, product modal and demo cart are interactive", async ({ page }) => 
 test("Mobile header menu opens and closes on Escape", async ({ page, isMobile }) => {
   test.skip(!isMobile, "Mobile navigation only");
   await page.goto("/");
-  await expect(page.locator(".intro")).toBeHidden({ timeout: 12_000 });
+  await expect(page.locator(".physics-curtain")).toBeHidden({ timeout: 12_000 });
   await page.getByRole("button", { name: "بازکردن فهرست" }).click();
   await expect(page.getByRole("dialog", { name: "فهرست" })).toBeVisible();
   await page.keyboard.press("Escape");
   await expect(page.getByRole("dialog", { name: "فهرست" })).toBeHidden();
+});
+
+
+test("Velvet curtains show active fabric canvas and open cleanly", async ({ page }, info) => {
+  await page.goto("/", { waitUntil: "domcontentloaded" });
+  const stage = page.locator(".physics-curtain");
+  await expect(stage).toBeVisible({ timeout: 5_000 });
+  await expect(stage.locator("canvas")).toBeVisible();
+  await page.waitForTimeout(1850);
+  if (await stage.isVisible()) {
+    await page.screenshot({ path: info.outputPath("curtain-mid-open.png"), animations: "allow" });
+  }
+  await expect(stage).toBeHidden({ timeout: 12_000 });
+  await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
 });

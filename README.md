@@ -6,7 +6,7 @@ Luxury, photographic, Persian RTL interior editorial commerce concept built usin
 * **Italian Noir:** dark charcoal, walnut, restrained champagne gold and cream.
 * Large licensed photoreal concept art; each editorial image is different.
 * Three photographic reveals: architectural vertical mask, asymmetrical arch and radial crescent cut.
-* Premium brand intro: timed curtain opening with reduced-motion and reliable unlock.
+* Premium brand intro: Canvas-rendered silk velvet curtain with per-row damped Verlet spring mass, gravitational sag, pleat shading, realistic bottom-edge inertia, GSAP time driver, reduced-motion bypass and 6.5s fail-safe unlock.
 * GSAP hero typography, progressive scroll reveals, subtle image parallax and reverse-safe cleanup.
 * Real interactive filters, search, product detail modal, favorites, and client-persisted demo cart.
 * Accessible overlays, keyboard Escape, semantic landmarks, portrait layouts, 320px+ responsive styling.
