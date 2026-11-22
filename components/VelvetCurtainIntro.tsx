@@ -50,8 +50,8 @@ export default function VelvetCurtainIntro({ onRevealStart, onComplete }: Curtai
       host.classList.add("velvet-curtain--parting");
       tween = gsap.to(motion, {
         value: 1,
-        // Slow, continuous silk-like pull without sharp acceleration near the midpoint.
-        duration: 4.0,
+        // A deliberately slow 5.6s opening lets the top lead while the weighted gold hem follows.
+        duration: 5.6,
         ease: "sine.inOut",
         onUpdate: () => cloth.setOpening(motion.value),
         onComplete: () => {
@@ -96,7 +96,7 @@ export default function VelvetCurtainIntro({ onRevealStart, onComplete }: Curtai
       if (!started) begin();
       if (cloth.available && !cloth.isOffscreen()) host.classList.add("velvet-curtain--emergency");
       window.setTimeout(done, 1050);
-    }, 16000);
+    }, 22000);
 
     return () => {
       alive = false;
