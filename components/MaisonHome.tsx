@@ -14,9 +14,9 @@ type CollectionFilter = "همه" | ProductCategory;
 const filters: CollectionFilter[] = ["همه", "مبلمان", "نورپردازی", "میز", "اکسسوری"];
 
 const spaces = [
-  { number: "01", name: "مبلمان", english: "THE SEATING", image: images.categorySeating, className: "spaces-card--arch" },
+  { number: "01", name: "مبلمان", english: "THE SEATING", image: images.categorySeating, className: "spaces-card--regular" },
   { number: "02", name: "نورپردازی", english: "THE LIGHT", image: images.categoryLighting, className: "spaces-card--regular" },
-  { number: "03", name: "اشیای خاص", english: "THE OBJECTS", image: images.categoryObjects, className: "spaces-card--crescent" },
+  { number: "03", name: "اشیای خاص", english: "THE OBJECTS", image: images.categoryObjects, className: "spaces-card--regular" },
 ];
 
 function EditorialImage({ src, alt, className = "", sizes = "100vw", priority = false, position = "center" }: {
@@ -84,9 +84,27 @@ export default function MaisonHome() {
       setIntro("ready");
       return;
     }
-    const reveal = window.setTimeout(() => setIntro("revealing"), 1250);
-    const ready = window.setTimeout(() => setIntro("ready"), 2140);
-    return () => { window.clearTimeout(reveal); window.clearTimeout(ready); };
+    let settled = false;
+    const finishIntro = () => {
+      if (!settled) {
+        settled = true;
+        setIntro("ready");
+      }
+    };
+    const safetyTimeout = window.setTimeout(finishIntro, 4200);
+    const opening = gsap.timeline({ onComplete: finishIntro });
+    opening
+      .set(".intro-shade--left", { xPercent: 0 })
+      .set(".intro-shade--right", { xPercent: 0 })
+      .fromTo(".intro-rule span", { scaleX: 0 }, { scaleX: 1, duration: 1.1, ease: "power2.out" }, 0)
+      .to(".intro-center", { autoAlpha: 0, y: -24, duration: 0.55, ease: "power2.inOut" }, 1.06)
+      .to(".intro-seam", { autoAlpha: 0, duration: 0.35 }, 1.17)
+      .to(".intro-shade--left", { xPercent: -103, duration: 1.58, ease: "power4.inOut" }, 1.28)
+      .to(".intro-shade--right", { xPercent: 103, duration: 1.58, ease: "power4.inOut" }, 1.28);
+    return () => {
+      window.clearTimeout(safetyTimeout);
+      opening.kill();
+    };
   }, [prefersLessMotion]);
 
   useEffect(() => {
@@ -213,6 +231,7 @@ export default function MaisonHome() {
       <div aria-hidden={intro === "ready"} className={"intro intro--" + intro}>
         <div className="intro-shade intro-shade--left" />
         <div className="intro-shade intro-shade--right" />
+        <div className="intro-seam" />
         <div className="intro-center">
           <div className="intro-monogram"><span>M</span><i /><span>N</span></div>
           <div className="intro-wordmark">MAISON NOOR</div>
@@ -253,11 +272,11 @@ export default function MaisonHome() {
               <div className="hero-meta"><span>MAISON NOOR</span><span>EDITION / 2026</span></div>
               <div className="hero-main">
                 <span className="micro-label" data-hero-sub>COLLECTED WITH INTENTION</span>
-                <h1 id="hero-heading" className="hero-title" dir="ltr">
-                  <span className="text-mask"><span data-hero-title>THE ART</span></span>
-                  <span className="text-mask"><span data-hero-title>OF LIVING.</span></span>
+                <h1 id="hero-heading" className="hero-title">
+                  <span className="text-mask"><span data-hero-title>هنرِ</span></span>
+                  <span className="text-mask"><span data-hero-title>زندگی.</span></span>
                 </h1>
-                <p className="hero-fa" data-hero-sub>فضایی فراتر از یک خانه</p>
+                <p className="hero-fa" data-hero-sub>خانه‌ای فراتر از یک فضا</p>
                 <p className="hero-description" data-hero-sub>اشیای منتخب، بافت‌های اصیل و نگاهی آرام به زیبایی زندگی.</p>
                 <button className="underlined-cta hero-cta" onClick={() => visit("collections")} type="button" data-hero-sub>کشف مجموعه <ArrowLeft size={17} strokeWidth={1.2}/></button>
               </div>
@@ -301,7 +320,7 @@ export default function MaisonHome() {
               <div className="spaces-grid">
                 {spaces.map((space) => (
                   <button type="button" key={space.number} className={"spaces-card " + space.className} onClick={() => visit("objects")} data-reveal>
-                    <EditorialImage src={space.image} alt={"عکاسی واقعی از دکوراسیون " + space.name} sizes="(max-width: 780px) 100vw, 33vw" />
+                    <EditorialImage src={space.image} alt={"تصویر اختصاصی دکوراسیون " + space.name} sizes="(max-width: 780px) 100vw, 33vw" />
                     <div className="spaces-meta"><span>{space.number} / {space.english}</span><strong>{space.name}</strong><ArrowUpLeft size={20} strokeWidth={1.2}/></div>
                   </button>
                 ))}
@@ -324,7 +343,7 @@ export default function MaisonHome() {
                 {filtered.map((product, index) => (
                   <article key={product.id} className={"product-card product-card--" + index % 3} data-reveal>
                     <button type="button" className="product-visual" onClick={() => setSelected(product)} aria-label={"مشاهده " + product.name}>
-                      <EditorialImage src={product.image} alt={"تصویر واقعی الهام‌بخش برای " + product.category} sizes="(max-width: 680px) 100vw, (max-width: 1100px) 50vw, 25vw" position={product.imagePosition || "center"}/>
+                      <EditorialImage src={product.image} alt={"تصویر اختصاصی الهام‌بخش برای " + product.category} sizes="(max-width: 680px) 100vw, (max-width: 1100px) 50vw, 25vw" position={product.imagePosition || "center"}/>
                       <span className="product-quick">مشاهده جزئیات <ArrowUpLeft size={16}/></span>
                     </button>
                     <div className="product-meta"><div><span>{product.latin}</span><h3>{product.name}</h3><p>{toMoney(product.price)}</p></div><button type="button" aria-label={"افزودن " + product.name + " به علاقه‌مندی‌ها"} aria-pressed={favorites.includes(product.id)} onClick={() => toggleFavorite(product.id)} className={favorites.includes(product.id) ? "favorite is-active" : "favorite"}><Heart size={19} fill={favorites.includes(product.id) ? "currentColor" : "none"} strokeWidth={1.25}/></button></div>
@@ -374,7 +393,7 @@ export default function MaisonHome() {
         <footer className="footer">
           <div className="container footer-top"><span className="micro-label gold-text">THE HOME, REIMAGINED.</span><a className="footer-top-link" href="#home" onClick={e => { e.preventDefault(); visit("home"); }}>بازگشت به بالا <ArrowUpLeft size={18}/></a></div>
           <div className="container footer-brand" dir="ltr">MAISON NOOR</div>
-          <div className="container footer-bottom"><span>© 2026 MAISON NOOR — DEMO CONCEPT</span><span>تصاویر محیط، عکس‌های واقعی از Unsplash هستند؛ اقلام و قیمت‌ها نمایشی‌اند.</span></div>
+          <div className="container footer-bottom"><span>© 2026 MAISON NOOR — DEMO CONCEPT</span><span>تصاویر اختصاصی این کانسپت تولید شده‌اند؛ اقلام و قیمت‌ها نمایشی‌اند.</span></div>
         </footer>
       </div>
 
@@ -402,7 +421,7 @@ export default function MaisonHome() {
           <section className="product-modal" role="dialog" aria-modal="true" aria-labelledby="product-modal-title">
             <button type="button" className="modal-close" aria-label="بستن" onClick={() => setSelected(null)}><X size={21}/></button>
             <div className="modal-photo"><Image src={selected.image} alt={"تصویر الهام‌بخش " + selected.name} fill unoptimized sizes="(max-width: 700px) 100vw, 45vw" style={{objectFit:"cover"}}/></div>
-            <div className="modal-info"><span className="micro-label gold-text">{selected.latin}</span><h2 id="product-modal-title">{selected.name}</h2><p>{selected.description}</p><dl><div><dt>متریال</dt><dd>{selected.material}</dd></div><div><dt>دسته</dt><dd>{selected.category}</dd></div></dl><strong>{toMoney(selected.price)}</strong><button type="button" onClick={() => addToCart(selected)}>افزودن به سبد نمایشی <ShoppingBag size={18}/></button><small>تصویر و قیمت برای نمایش کانسپت هستند، نه کاتالوگ واقعی.</small></div>
+            <div className="modal-info"><span className="micro-label gold-text">{selected.latin}</span><h2 id="product-modal-title">{selected.name}</h2><p>{selected.description}</p><dl><div><dt>متریال</dt><dd>{selected.material}</dd></div><div><dt>دسته</dt><dd>{selected.category}</dd></div></dl><strong>{toMoney(selected.price)}</strong><button type="button" onClick={() => addToCart(selected)}>افزودن به سبد نمایشی <ShoppingBag size={18}/></button><small>تصویر اختصاصی و قیمت صرفاً برای نمایش کانسپت هستند، نه کاتالوگ واقعی.</small></div>
           </section>
         </div>
       )}

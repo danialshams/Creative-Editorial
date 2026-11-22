@@ -1,43 +1,60 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { readFileSync, existsSync } from "node:fs";
+import { join } from "node:path";
 
 const page = readFileSync("components/MaisonHome.tsx", "utf8");
 const data = readFileSync("data/catalog.ts", "utf8");
 const css = readFileSync("app/globals.css", "utf8");
 const layout = readFileSync("app/layout.tsx", "utf8");
+const assets = [
+ "hero","collection-one","collection-two","category-seating","category-lighting",
+ "category-objects","material-one","material-two","journal","product-chiaro",
+ "product-terre","product-casa","product-lume"
+];
 
-test("Persian document has correct language and direction", () => {
-  assert.match(layout, /lang="fa" dir="rtl"/);
+test("Persian page has native RTL and large Persian editorial hero", () => {
+ assert.match(layout, /lang="fa" dir="rtl"/);
+ assert.match(page, /هنرِ/);
+ assert.match(page, /زندگی\./);
+ assert.match(css, /\.hero-content\{direction:rtl\}/);
+ assert.match(css, /\.hero-title\{direction:rtl/);
 });
-test("Uses authentic licensed Unsplash source photos with no duplicate IDs", () => {
-  const ids = [...data.matchAll(/photo-\d{13}-[a-z0-9]+/g)].map(m => m[0]);
-  assert.ok(ids.length >= 12, "at least a dozen unique source photos");
-  assert.equal(new Set(ids).size, ids.length, "each editorial section uses a different photo");
-  assert.match(data, /images\.unsplash\.com/);
+test("All bespoke visual assets exist as local WebP with unique paths", () => {
+ assert.equal(new Set(assets).size,assets.length);
+ for(const name of assets) {
+   assert.ok(existsSync(join("public","images",name+".webp")), "missing image "+name);
+   assert.ok(data.includes('localPhoto("'+name+'")'), "unreferenced image "+name);
+ }
+ assert.doesNotMatch(data,/https?:\/\/|unsplash|sourceImage/);
 });
-test("GSAP scroll and cinematic introductory scenes exist", () => {
-  assert.match(page, /ScrollTrigger/);
-  assert.match(page, /data-photo-reveal/);
-  assert.match(page, /data-parallax/);
-  assert.match(page, /intro--/);
+test("Luxury fabric curtains open from middle with a GSAP sequence", () => {
+ assert.match(page,/intro-shade--left/);
+ assert.match(page,/intro-shade--right/);
+ assert.match(page,/xPercent: -103/);
+ assert.match(page,/xPercent: 103/);
+ assert.match(css,/intro-seam/);
+ assert.match(page,/safetyTimeout/);
 });
-test("Accessible reduced motion and ESC-close overlays included", () => {
-  assert.match(css, /prefers-reduced-motion:reduce/);
-  assert.match(page, /key === "Escape"/);
-  assert.match(page, /aria-modal="true"/);
+test("Balanced restrained photographic masks, not every image shaped", () => {
+ assert.match(page,/arch-cut/);
+ assert.match(page,/crescent-cut/);
+ assert.equal((page.match(/spaces-card--arch|spaces-card--crescent/g)||[]).length,0);
 });
-test("Image containers crop to intended viewport without gaps", () => {
-  assert.match(css, /object-fit:cover/);
-  assert.match(css, /arch-cut/);
-  assert.match(css, /crescent-cut/);
+test("Motion and accessibility are supported", () => {
+ assert.match(page,/ScrollTrigger/);
+ assert.match(page,/data-photo-reveal/);
+ assert.match(page,/data-parallax/);
+ assert.match(css,/prefers-reduced-motion:reduce/);
+ assert.match(page,/key === "Escape"/);
+ assert.match(page,/aria-modal="true"/);
 });
-test("Demo purchase does not misrepresent a real checkout", () => {
-  assert.match(page, /تکمیل خرید \(در نسخه نمایشی غیرفعال\)/);
-  assert.match(page, /disabled/);
+test("Images always fill their sections and mobile widths are covered", () => {
+ assert.match(css,/object-fit:cover/);
+ assert.match(css,/max-width:400px/);
+ assert.match(css,/max-width:980px/);
 });
-test("Layouts cover narrow mobile and wide desktop", () => {
-  assert.match(css, /max-width:400px/);
-  assert.match(css, /max-width:980px/);
-  assert.match(css, /grid-template-columns:repeat\(4/);
+test("No misleading real checkout", () => {
+ assert.match(page,/تکمیل خرید \(در نسخه نمایشی غیرفعال\)/);
+ assert.match(page,/disabled/);
 });
