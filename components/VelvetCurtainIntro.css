@@ -1,28 +1,65 @@
-/* MAISON NOOR original stage styling — charcoal velvet, walnut shadows, champagne trim. */
-.velvet-curtain{--curtain-dark:#171410;--curtain-plum:#2a231d;--curtain-glint:#795b43;--curtain-gold:#bda27a;position:fixed;inset:0;width:100%;height:100dvh;z-index:9999;background:var(--curtain-dark);overflow:hidden;isolation:isolate;pointer-events:all;touch-action:none}
-.velvet-curtain__backdrop{position:absolute;inset:0;background:radial-gradient(ellipse 70% 75% at 52% 40%,#2b2520,#111311 90%)}
-.velvet-curtain__canvas{position:absolute;inset:0;width:100%;height:100%;display:block;z-index:2;pointer-events:none}
-.velvet-curtain__rail{position:absolute;top:0;left:0;width:100%;height:9px;z-index:6;background:linear-gradient(to bottom,#4b3e2c 0%,#ab8960 22%,#251f19 55%,#100e0b 100%);box-shadow:0 6px 16px rgba(0,0,0,.32)}
-.velvet-curtain__valance{position:absolute;z-index:5;top:8px;left:0;width:100%;height:min(7vh,63px);background:repeating-radial-gradient(ellipse 150px 54px at 50% -10px,rgba(122,90,59,.13) 0 23%,transparent 26% 40%),linear-gradient(94deg,#15120f 0%,#38271d 17%,#231b16 34%,#493427 53%,#211a15 70%,#2f251f 89%,#15120f 100%);clip-path:polygon(0 0,100% 0,100% 66%,95% 87%,90% 65%,85% 83%,80% 65%,75% 89%,70% 66%,65% 85%,60% 67%,55% 82%,50% 67%,45% 82%,40% 67%,35% 85%,30% 66%,25% 89%,20% 65%,15% 83%,10% 65%,5% 87%,0 66%);filter:drop-shadow(0 6px 10px rgba(0,0,0,.6));pointer-events:none}
-.velvet-curtain__cord{position:absolute;z-index:4;top:53%;width:clamp(28px,5vw,84px);height:12px;border-top:2px solid rgba(188,151,102,.5);border-bottom:1px solid rgba(122,83,50,.45);box-shadow:0 6px 15px rgba(0,0,0,.24);opacity:0;transition:opacity .65s ease;pointer-events:none}
-.velvet-curtain__cord::after{content:"";position:absolute;top:9px;left:49%;width:1px;height:26px;background:linear-gradient(#baa078,transparent)}
-.velvet-curtain__cord--left{left:8%;transform:rotate(7deg)}
-.velvet-curtain__cord--right{right:8%;transform:rotate(-7deg)}
-.velvet-curtain--parting .velvet-curtain__cord{opacity:1;transition-delay:1.15s}
-.velvet-curtain__identity{z-index:7;position:absolute;top:46%;left:50%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:10px;color:#f0e9df;text-align:center;white-space:nowrap;pointer-events:none;transition:opacity .65s ease,transform .9s cubic-bezier(.2,.75,.3,1);text-shadow:0 2px 22px rgba(0,0,0,.7)}
-.velvet-curtain__ornament{font-size:17px;color:var(--curtain-gold);margin-bottom:18px}
-.velvet-curtain__wordmark{font:400 clamp(21px,3vw,45px)/1.1 Georgia,"Times New Roman",serif;letter-spacing:.32em;direction:ltr;text-indent:.32em}
-.velvet-curtain__descriptor{font:400 9px Georgia,"Times New Roman",serif;letter-spacing:.45em;color:var(--curtain-gold);direction:ltr;margin-top:8px}
-.velvet-curtain__hairline{display:block;width:140px;height:1px;background:linear-gradient(90deg,transparent,#bda27a,transparent);margin-top:28px}
-.velvet-curtain--parting .velvet-curtain__identity{opacity:0;transform:translate(-50%,-60%)}
-.velvet-curtain--released{pointer-events:none;opacity:0;transition:opacity .32s ease}
-.velvet-curtain__fallback{display:none;position:absolute;inset:0;z-index:3;pointer-events:none}
-.velvet-curtain__fallback span{position:absolute;top:0;bottom:0;width:50.2%;background:repeating-linear-gradient(92deg,#171310 0 17px,#271c16 19px 36px,#443126 41px 48px,#211912 51px 67px,#15110e 73px 81px);box-shadow:inset 0 -8px 5px -4px #9f8157,5px 0 20px rgba(0,0,0,.5);transition:transform 2.15s cubic-bezier(.55,.06,.29,1)}
-.velvet-curtain__fallback span:first-child{left:0;transform-origin:left center}
-.velvet-curtain__fallback span:last-child{right:0;transform-origin:right center}
-.velvet-curtain--fallback .velvet-curtain__fallback{display:block}
-.velvet-curtain--fallback .velvet-curtain__canvas{display:none}
-.velvet-curtain--parting.velvet-curtain--fallback .velvet-curtain__fallback span:first-child{transform:translateX(-94%) scaleX(.52)}
-.velvet-curtain--parting.velvet-curtain--fallback .velvet-curtain__fallback span:last-child{transform:translateX(94%) scaleX(.52)}
-@media(max-width:600px){.velvet-curtain__wordmark{letter-spacing:.19em;text-indent:.19em;font-size:24px}.velvet-curtain__descriptor{letter-spacing:.3em}.velvet-curtain__valance{height:42px}.velvet-curtain__cord{width:30px}}
-@media(prefers-reduced-motion:reduce){.velvet-curtain{display:none!important}}
+/* The homepage is already behind the real fabric. No solid stage/backdrop, rod, pelmet, ties or title. */
+.velvet-curtain {
+  --curtain-night: #171410;
+  --curtain-velvet: #2a231d;
+  --curtain-lit: #795b43;
+  --curtain-gold: #bda27a;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  height: 100dvh;
+  width: 100%;
+  background: transparent;
+  overflow: hidden;
+  pointer-events: all;
+  touch-action: none;
+  isolation: isolate;
+}
+.velvet-curtain__canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: 2;
+  pointer-events: none;
+  clip-path: inset(0 0 0 0);
+}
+/* SSR-safe fallback avoids a flash before WebGL creates its first frame. */
+.velvet-curtain__fallback {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+.velvet-curtain__fallback span {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50.6%;
+  background: repeating-linear-gradient(92deg,
+    #171310 0 14px,#261c17 19px 35px,#493326 42px 51px,
+    #241a14 57px 76px,#14110e 83px 93px);
+  box-shadow: inset -11px 0 25px rgba(0,0,0,.32),
+    inset 8px 0 18px rgba(188,151,109,.06);
+  transition: transform 2.5s cubic-bezier(.69,.02,.23,1);
+  will-change: transform;
+}
+.velvet-curtain__fallback span:first-child { left: 0; }
+.velvet-curtain__fallback span:last-child { right: 0; transform: scaleX(-1); }
+.velvet-curtain--webgl .velvet-curtain__fallback { display: none; }
+.velvet-curtain--fallback .velvet-curtain__canvas { display: none; }
+.velvet-curtain--parting .velvet-curtain__fallback span:first-child {
+  transform: translateX(-103%);
+}
+.velvet-curtain--parting .velvet-curtain__fallback span:last-child {
+  transform: translateX(103%) scaleX(-1);
+}
+/* Used only as GPU failure recovery. Normal completion never hides the fabric prematurely. */
+.velvet-curtain--emergency .velvet-curtain__canvas {
+  clip-path: inset(0 50% 0 50%);
+  transition: clip-path 1s ease-in;
+}
+@media(prefers-reduced-motion:reduce) {
+  .velvet-curtain { display: none !important; }
+}
