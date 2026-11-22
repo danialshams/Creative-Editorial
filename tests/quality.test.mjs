@@ -28,16 +28,23 @@ test("All bespoke visual assets exist as local WebP with unique paths", () => {
  }
  assert.doesNotMatch(data,/https?:\/\/|unsplash|sourceImage/);
 });
-test("Spring-physics velvet curtains open from the centre with a safe fallback", () => {
- const curtain = readFileSync("components/PhysicsCurtain.tsx", "utf8");
- assert.match(page,/PhysicsCurtain/);
- assert.match(curtain,/oldX|point\.px/);
- assert.match(curtain,/const spring/);
- assert.match(curtain,/drawCloth/);
- assert.match(curtain,/requestAnimationFrame/);
- assert.match(curtain,/progress: 1/);
- assert.match(curtain,/6500/);
- assert.match(css,/physics-curtain--painted/);
+test("Independent 3D WebGL velvet curtain opens with a safe exit", () => {
+ const curtain = readFileSync("components/VelvetCurtainIntro.tsx", "utf8");
+ const simulation = readFileSync("components/velvet-simulation.ts", "utf8");
+ const curtainCSS = readFileSync("components/VelvetCurtainIntro.css", "utf8");
+ assert.match(page,/VelvetCurtainIntro/);
+ assert.doesNotMatch(page,/PhysicsCurtain/);
+ assert.match(curtain,/createVelvetScene/);
+ assert.match(curtain,/onComplete/);
+ assert.match(curtain,/4850/);
+ assert.match(curtain,/prefers-reduced-motion/);
+ assert.match(simulation,/Verlet/);
+ assert.match(simulation,/WebGL/);
+ assert.match(simulation,/gravity|GRAVITY|1400 \* dt \* dt/i);
+ assert.match(simulation,/clampRail/);
+ assert.match(simulation,/knotX/);
+ assert.match(curtainCSS,/velvet-curtain--fallback/);
+ assert.match(curtainCSS,/#bda27a/);
 });
 
 test("Balanced restrained photographic masks, not every image shaped", () => {

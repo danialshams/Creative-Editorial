@@ -6,7 +6,7 @@ import { ArrowDownLeft, ArrowLeft, ArrowUpLeft, Check, ChevronLeft, Heart, Menu,
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { images, products, toMoney, type Product, type ProductCategory } from "../data/catalog";
-import PhysicsCurtain from "./PhysicsCurtain";
+import VelvetCurtainIntro from "./VelvetCurtainIntro";
 
 type IntroState = "loading" | "revealing" | "ready";
 type Overlay = "none" | "search" | "cart" | "menu";
@@ -207,7 +207,7 @@ export default function MaisonHome() {
 
   return (
     <div ref={rootRef} className="site-root">
-      {intro !== "ready" && <PhysicsCurtain onFinished={finishCurtain} />}
+      {intro !== "ready" && <VelvetCurtainIntro onComplete={finishCurtain} />}
 
       <div className="page-wrap">
         <header className={"site-header" + (navScrolled ? " site-header--solid" : "")}>
