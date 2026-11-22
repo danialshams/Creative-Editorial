@@ -1,0 +1,15 @@
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { readFileSync, readdirSync, existsSync } from 'node:fs';
+import { resolve } from 'node:path';
+const root=resolve(import.meta.dirname,'..');
+const catalog=readFileSync(resolve(root,'src/lib/catalog.ts'),'utf8');
+const storefront=readFileSync(resolve(root,'src/components/Storefront.tsx'),'utf8');
+const css=readFileSync(resolve(root,'src/app/globals.css'),'utf8');
+const layout=readFileSync(resolve(root,'src/app/layout.tsx'),'utf8');
+test('Persian right-to-left document',()=>{assert.match(layout,/lang="fa" dir="rtl"/);});
+test('Brand and palette use unified cream CSS',()=>{assert.match(css,/#F7F4ED/i); assert.match(storefront,/MAISON NOOR/);});
+test('All original photo cutout assets available',()=>{for(const n of ['chair','lamp','table','vase','sofa'])assert.ok(existsSync(resolve(root,`public/images/${n}.webp`)),`${n} missing`)});
+test('Functional catalog retains five products with numeric prices',()=>{for(const n of ['ava','terra','sora','riva','mira'])assert.match(catalog,new RegExp(`id: '${n}'`)); assert.match(catalog,/price: \d+/);});
+test('Reduced motion and responsive layout supported',()=>{assert.match(css,/prefers-reduced-motion/);assert.match(css,/@media\s*\(max-width:\s*640px\)/);});
+test('No old-brand remnants',()=>{for(const f of ['src/app/globals.css','src/components/Storefront.tsx','src/lib/catalog.ts']){const c=readFileSync(resolve(root,f),'utf8');assert.doesNotMatch(c,/ATRIUM|HORÉL|HOREL|smartdirect/i);}});

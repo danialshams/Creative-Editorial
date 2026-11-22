@@ -1,5 +1,5 @@
 {
-  "name": "horel-atelier-watch",
+  "name": "maison-noor",
   "version": "1.0.0",
   "private": true,
   "scripts": {
@@ -11,10 +11,11 @@
     "check": "npm run typecheck && npm run test"
   },
   "dependencies": {
+    "gsap": "^3.14.2",
+    "lucide-react": "^0.468.0",
     "next": "16.4.6",
     "react": "19.2.0",
-    "react-dom": "19.2.0",
-    "gsap": "3.14.2"
+    "react-dom": "19.2.0"
   },
   "devDependencies": {
     "@types/node": "22.18.0",
@@ -22,7 +23,5 @@
     "@types/react-dom": "19.2.3",
     "typescript": "5.9.3"
   },
-  "engines": {
-    "node": "22.x"
-  }
+  "engines": {"node": ">=22"}
 }

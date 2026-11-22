@@ -1,23 +1,15 @@
-# HORÉL — Mechanical watch atelier concept
+# MAISON NOOR / میزونور
 
-A premium Persian RTL cinematic horology **concept storefront** built with Next.js 16, React 19, TypeScript and GSAP / ScrollTrigger.
+A deliberately minimal, cinematic home-decor storefront concept built in Next.js App Router, React, GSAP and ScrollTrigger. Persian RTL, responsive, keyboard-accessible and performance-aware. Art direction: warm ivory `#F7F4ED`, olive `#59614B`, charcoal `#25251F`.
 
-## Experience
-- Oversized custom SVG mechanical wristwatch with detailed indices, dial, glass reflection, visible moving gears and metallic case.
-- Cinematic hero reveal, scroll-linked workshop movement, editorial collection, keyboard-accessible watch detail and demo cart drawers.
-- Full Persian RTL, accessible buttons, escape-to-close dialogs, reduced-motion support, responsive layout from 320px upward.
-- Palette: ink `#0B1110`, forest `#172520`, champagne `#B8A783`, ivory `#F1EDE4`.
+## Design language
+The images were generated specifically for this concept, and then converted to **transparent cutout WebP** files. The background is rendered by the site's own CSS, avoiding a separate product-image backdrop. Each object retains a soft natural contact shadow. The first viewport is intentionally spacious. The loader reveals the page only after a restrained, short branded sequence and can be skipped on repeat visits or for reduced-motion preferences.
 
-## Setup
-```bash
-npm install
-npm run check
-npm run build
-npm run dev
-```
+## Development
+`npm install && npm run check && npm run build && npm run dev`
 
-## Important: demonstration only
-HORÉL is a fictional conceptual brand. Product specifications and prices are illustrative; the cart exists only in client memory. **There is no real ordering, payment, authentication, inventory or database.** The interface clearly labels its demo nature. The editorial macro image is credited to Lucas Santos / Unsplash; product renders are original SVG illustrations.
+## Demo notice
+All products and prices are **illustrative**. Cart and favorites persist in localStorage only. Product dialogs, search, category filters, mobile menu and the cart drawer are interactive; checkout shows an explicit unavailable notice. There is no inventory database, order-processing backend, user account, or payment gateway. No claims of real stock or checkout completion.
 
-## Quality
-GitHub Actions runs type checking, tests, and a Next.js production build on every push to `main` and every pull request.
+## Source
+The original reference was an approved Maison Noor minimal cutout Figma concept. Product images were created as project-specific visual assets. No existing ATRIUM or HORÉL product files remain in this source tree.
