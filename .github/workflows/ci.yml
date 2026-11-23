@@ -1,4 +1,4 @@
-name: Quality & Production Build
+name: Creative Editorial — Build & QA
 on:
   push:
     branches: [main]
@@ -7,28 +7,28 @@ on:
 jobs:
   verify:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Install
+      - name: Install dependencies
         run: npm install --no-audit --no-fund
-      - name: Test
-        run: npm run test
-      - name: Typecheck
+      - name: Functional and asset tests
+        run: npm test
+      - name: TypeScript typecheck
         run: npm run typecheck
-      - name: Next.js production build
+      - name: Production build
         run: npm run build
-      - name: Install Chromium
+      - name: Install browser
         run: npx playwright install --with-deps chromium
-      - name: Browser QA — RTL, assets, responsive, dialogs
+      - name: RTL and responsive browser QA
         run: npm run test:e2e
-      - name: Keep visual screenshots for review
+      - name: Upload visual review screenshots
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: maison-noor-visual-review
+          name: khaneh-choob-browser-qa
           path: test-results/
           retention-days: 7

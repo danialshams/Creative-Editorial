@@ -1,5 +1,2 @@
-import MaisonHome from "../components/MaisonHome";
-
-export default function Home() {
-  return <MaisonHome />;
-}
+import HouseWoodHome from "../components/HouseWoodHome";
+export default function HomePage(){return <HouseWoodHome/>;}
