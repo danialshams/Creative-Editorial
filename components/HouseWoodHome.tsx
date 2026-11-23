@@ -69,34 +69,71 @@ export default function HouseWoodHome(){
    if(!ready||!mainRef.current||window.matchMedia("(prefers-reduced-motion: reduce)").matches)return;
    gsap.registerPlugin(ScrollTrigger);
    const ctx=gsap.context(()=>{
-     gsap.fromTo(".hero-copy>*",{opacity:.65,y:22},{opacity:1,y:0,duration:1,stagger:.13,ease:"power3.out",delay:.15});
-     gsap.fromTo(".service-strip",{opacity:.72,y:19},{opacity:1,y:0,duration:.85,ease:"power3.out",delay:.6});
-     gsap.utils.toArray<HTMLElement>("[data-reveal]").forEach((el)=>{
-       gsap.fromTo(el,{opacity:.83,y:24},{opacity:1,y:0,duration:.83,ease:"power3.out",scrollTrigger:{trigger:el,start:"top 90%",once:true}});
+     // Hero: one photograph settles first; then each text line enters in its own beat.
+     const intro=gsap.timeline({defaults:{ease:"power3.out"}});
+     intro.fromTo(".hero-picture img",{scale:1.045},{scale:1,duration:1.6,ease:"power2.out"},0)
+       .fromTo(".hero-kicker",{opacity:0,y:16},{opacity:1,y:0,duration:.48},.2)
+       .fromTo(".hero-line",{opacity:0,y:31,filter:"blur(6px)"},{opacity:1,y:0,filter:"blur(0px)",duration:.65,stagger:.2},.5)
+       .fromTo(".hero-copy p",{opacity:0,y:20},{opacity:1,y:0,duration:.57},1.12)
+       .fromTo(".hero-copy .solid-btn",{opacity:0,y:18,scale:.94},{opacity:1,y:0,scale:1,duration:.55},1.49)
+       .fromTo(".service-strip > div",{opacity:0,y:15},{opacity:1,y:0,duration:.55,stagger:.12},1.72);
+
+     // Headings: eyebrow, title, subtitle, and action are revealed *in sequence*.
+     gsap.utils.toArray<HTMLElement>(".section-heading, .spaces-heading, .about-text").forEach((el)=>{
+       const title=el.querySelector("h2"), eyebrow=el.querySelector(".eyebrow"), paragraphs=[...el.querySelectorAll(":scope > p, :scope > div > p")];
+       const actions=[...el.querySelectorAll(":scope > button, :scope > div > button")];
+       const tl=gsap.timeline({scrollTrigger:{trigger:el,start:"top 88%",once:true},defaults:{ease:"power3.out"}});
+       if(eyebrow)tl.fromTo(eyebrow,{opacity:0,x:20},{opacity:1,x:0,duration:.45});
+       if(title)tl.fromTo(title,{opacity:0,y:24,filter:"blur(5px)"},{opacity:1,y:0,filter:"blur(0px)",duration:.65},eyebrow?"+=.05":0);
+       if(paragraphs.length)tl.fromTo(paragraphs,{opacity:0,y:14},{opacity:1,y:0,duration:.52,stagger:.11},"+=.1");
+       if(actions.length)tl.fromTo(actions,{opacity:0,y:10},{opacity:1,y:0,duration:.47},"+=.08");
      });
-     gsap.utils.toArray<HTMLElement>("[data-stagger]").forEach((grid)=>{
-       gsap.fromTo([...grid.children],{opacity:.88,y:18},{opacity:1,y:0,duration:.72,stagger:.1,ease:"power3.out",scrollTrigger:{trigger:grid,start:"top 89%",once:true}});
+     // Categories open through a staggered shutter, not the same entrance as products.
+     const cats=gsap.utils.toArray<HTMLElement>(".category-grid .category-card");
+     gsap.fromTo(cats,{opacity:0,y:36,clipPath:"inset(0 0 90% 0 round 22px)"},
+       {opacity:1,y:0,clipPath:"inset(0 0 0% 0 round 22px)",duration:.85,stagger:.18,ease:"power3.inOut",scrollTrigger:{trigger:".category-grid",start:"top 85%",once:true}});
+     // Products rise in individual beats, with a restrained rotational settle.
+     gsap.fromTo(".product-grid .product-card",{opacity:0,y:42,rotation:2,scale:.94},
+       {opacity:1,y:0,rotation:0,scale:1,duration:.73,stagger:.2,ease:"back.out(1.08)",scrollTrigger:{trigger:".product-grid",start:"top 86%",once:true}});
+     const collection=gsap.timeline({scrollTrigger:{trigger:".collection-card",start:"top 82%",once:true}});
+     collection.fromTo(".collection-card > img",{scale:1.12,filter:"brightness(.8)"},{scale:1,filter:"brightness(.92)",duration:1.2,ease:"power2.out"})
+       .fromTo(".collection-copy > span",{opacity:0,x:24},{opacity:1,x:0,duration:.38},"-=.28")
+       .fromTo(".collection-copy h3",{opacity:0,y:20},{opacity:1,y:0,duration:.62},"+=.08")
+       .fromTo(".collection-copy button",{opacity:0,scale:.9},{opacity:1,scale:1,duration:.45},"+=.08");
+     // Room photographs reveal from alternating sides; text comes after each image.
+     gsap.utils.toArray<HTMLElement>(".space-card").forEach((card,i)=>{
+       const pic=card.querySelector(".space-img"),copy=card.querySelector(".space-details");
+       const tl=gsap.timeline({scrollTrigger:{trigger:card,start:"top 84%",once:true}});
+       if(pic)tl.fromTo(pic,{opacity:0,x:i%2?-36:36,scale:1.07},{opacity:1,x:0,scale:1,duration:.85,ease:"power3.out"});
+       if(copy)tl.fromTo(copy,{opacity:0,y:17},{opacity:1,y:0,duration:.55,ease:"power2.out"},"+=.1");
      });
-     gsap.utils.toArray<HTMLElement>("[data-parallax]").forEach((el)=>{
-       gsap.fromTo(el,{y:-16,scale:1.04},{y:16,scale:1.04,ease:"none",scrollTrigger:{trigger:el.parentElement,start:"top bottom",end:"bottom top",scrub:1.3}})
+     // Editorial about panel opens horizontally; content then follows in order.
+     gsap.fromTo(".about-photo",{opacity:.5,clipPath:"inset(0 90% 0 0 round 32px)"},{opacity:1,clipPath:"inset(0 0% 0 0 round 32px)",duration:1,ease:"power3.inOut",scrollTrigger:{trigger:".about-section",start:"top 84%",once:true}});
+     // Journal tiles and testimonials use different entrance directions and stagger.
+     gsap.fromTo(".journal-card",{opacity:0,x:34},{opacity:1,x:0,duration:.7,stagger:.19,ease:"power2.out",scrollTrigger:{trigger:".journal-grid",start:"top 88%",once:true}});
+     gsap.fromTo(".testimonial",{opacity:0,scale:.9,filter:"blur(5px)"},{opacity:1,scale:1,filter:"blur(0px)",duration:.7,stagger:.24,ease:"power3.out",scrollTrigger:{trigger:".testimonial-grid",start:"top 88%",once:true}});
+     // Only background detail layers receive restrained scroll-driven movement.
+     gsap.utils.toArray<HTMLElement>("[data-parallax]").forEach((img)=>{
+       gsap.fromTo(img,{y:-10},{y:10,ease:"none",scrollTrigger:{trigger:img.parentElement,start:"top bottom",end:"bottom top",scrub:1.5}});
      });
    },mainRef);
-   return ()=>{ctx.revert();};
+   return ()=>ctx.revert();
  },[ready]);
  return <>
  {!ready&&<HouseLightIntro onComplete={onIntroDone}/>}
  <div className={`site ${ready?"site--ready":""}`} ref={mainRef}>
   <header className="site-header" id="top">
    <div className="header-inner container">
+    <button className="mobile-toggle mobile-toggle--leading" aria-label="باز کردن منوی موبایل" aria-expanded={menuOpen} onClick={()=>setMenuOpen(true)}><Menu size={24}/></button>
     <a className="brand" href="#top" aria-label="خانه چوب، صفحه اصلی"><span className="brand-icon" aria-hidden="true"><svg viewBox="0 0 40 40" fill="none"><path d="M5 19 20 6l15 13v15H5V19Z" stroke="currentColor" strokeWidth="2.7" strokeLinejoin="round"/><path d="M14 34V22h12v12" stroke="currentColor" strokeWidth="2.3"/></svg></span><span>خانه چوب</span></a>
     <nav className="desktop-nav" aria-label="ناوبری اصلی"><a className="active" href="#top">صفحه اصلی</a><button onClick={()=>navigate("products")}>محصولات <ChevronDown size={15}/></button><button onClick={()=>navigate("categories")}>دکوراسیون منزل</button><button onClick={()=>navigate("journal")}>مجله و ایده‌ها</button><button onClick={()=>navigate("about")}>درباره ما</button><button onClick={()=>navigate("footer")}>تماس با ما</button></nav>
-    <div className="header-tools"><button aria-label="جست‌وجو" onClick={()=>setSearchOpen(true)}><Search size={21}/></button><button className="cart-head" aria-label="سبد خرید" onClick={()=>setCartOpen(true)}><ShoppingCart size={21}/>{count>0&&<span>{count.toLocaleString("fa-IR")}</span>}</button><button className="mobile-toggle" aria-label="باز کردن منوی موبایل" aria-expanded={menuOpen} onClick={()=>setMenuOpen(true)}><Menu size={24}/></button></div>
+    <div className="header-tools"><button aria-label="جست‌وجو" onClick={()=>setSearchOpen(true)}><Search size={21}/></button><button className="cart-head" aria-label="سبد خرید" onClick={()=>setCartOpen(true)}><ShoppingCart size={21}/>{count>0&&<span>{count.toLocaleString("fa-IR")}</span>}</button></div>
    </div>
   </header>
   <main>
    <section className="hero" aria-labelledby="hero-title">
     <picture className="hero-picture"><source srcSet="/images/hero-mobile.webp" media="(max-width: 700px)"/><img src="/images/hero-scene.webp" alt="فضای نشیمن گرم با مبل کرم، میز چوبی، آباژور و گلدان در یک صحنه یکپارچه" fetchPriority="high" width="1672" height="941"/></picture>
-    <div className="hero-copy"><span className="hero-kicker">مبلمان و دکوراسیون خانگی <span className="tiny-rule"/></span><h1 id="hero-title">دکوراسیون مدرن منزل<br/><em>با مبلمانی شیک و ماندگار</em></h1><p>مجموعه‌ای از مبلمان مدرن، راحت و باکیفیت برای خلق فضایی گرم، زیبا و هماهنگ در خانه شما.</p><button className="solid-btn" onClick={()=>navigate("products")}>مشاهده و خرید محصولات <ArrowLeft size={20}/></button></div>
+    <div className="hero-copy"><span className="hero-kicker">مبلمان و دکوراسیون خانگی <span className="tiny-rule"/></span><h1 id="hero-title"><span className="hero-line">دکوراسیون مدرن منزل</span><span className="hero-line hero-line--accent">با مبلمانی شیک و ماندگار</span></h1><p>مجموعه‌ای از مبلمان مدرن، راحت و باکیفیت برای خلق فضایی گرم، زیبا و هماهنگ در خانه شما.</p><button className="solid-btn" onClick={()=>navigate("products")}>مشاهده و خرید محصولات <ArrowLeft size={20}/></button></div>
    </section>
    <div className="service-strip container" aria-label="مزایای فروشگاه"><div><Truck/><span><strong>ارسال سریع و مطمئن</strong><small>به سراسر کشور</small></span></div><div><ShieldCheck/><span><strong>تضمین اصالت کالا</strong><small>و کیفیت بالا</small></span></div><div><CreditCard/><span><strong>پرداخت امن</strong><small>و آسان</small></span></div><div><Headphones/><span><strong>پشتیبانی تخصصی</strong><small>در تمام مراحل خرید</small></span></div></div>
 

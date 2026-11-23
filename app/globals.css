@@ -32,3 +32,96 @@
  .hero-copy h1{font-size:clamp(27px,3.6vw,37px);line-height:1.6}
  .hero-copy:before{content:"";position:absolute;z-index:-1;inset:-14px -15px -15px -24px;background:linear-gradient(90deg,rgba(247,241,235,.2),rgba(247,241,235,.85) 34%,rgba(247,241,235,.92));filter:blur(9px)}
 }
+
+
+/* KHANEH CHOOB V2: quality-first responsive art direction, visible sequential GSAP */
+.hero-line{display:block;white-space:normal}
+.hero-line--accent{color:var(--mid)}
+.mobile-toggle--leading{display:none}
+/* The ivory negative space and organic curve belong to the *single photograph*;
+   no CSS fake split/overlay and no independent half-image. */
+.hero-copy:before{display:none!important}
+.hero{height:clamp(600px,48.5vw,755px);min-height:0;max-width:100%;background:#f2eae1}
+.hero-picture{display:block;width:100%;height:100%;overflow:hidden}
+.hero-picture img{width:100%;height:100%;object-fit:cover;object-position:center 54%;image-rendering:auto}
+.hero-copy{right:4.4%;top:14%;width:min(38%,550px);max-width:550px}
+.hero-copy h1{font-size:clamp(34px,3.35vw,53px);line-height:1.54;margin:23px 0 15px;letter-spacing:-1.3px}
+.hero-copy p{font-size:clamp(12px,.95vw,15px);line-height:2.2;margin-bottom:24px}
+.section{padding-top:clamp(68px,6.3vw,112px);padding-bottom:clamp(20px,2.7vw,42px)}
+.section-heading{margin-bottom:clamp(24px,2.7vw,38px)}
+.category-photo{height:auto;aspect-ratio:4/3;overflow:hidden;display:block}
+.category-photo img{height:100%;width:100%;object-fit:cover;object-position:center 53%}
+.category-card:nth-child(2) .category-photo img{object-position:center 66%}
+.category-card:nth-child(4) .category-photo img{object-position:center 67%}
+.product-image{height:auto;aspect-ratio:1.48;overflow:hidden}
+.product-image-click{display:block;width:100%;height:100%}
+.product-image-click img{width:100%;height:100%;object-fit:cover;object-position:center}
+.collection-card{height:clamp(470px,46vw,660px);min-height:0}
+.collection-card>img{height:100%;width:100%;object-fit:cover}
+.space-img{height:auto;aspect-ratio:4/3;overflow:hidden}
+.space-img img{width:100%;height:100%;object-fit:cover}
+.about-photo{height:auto;aspect-ratio:1.55;overflow:hidden}
+.about-photo img{width:100%;height:100%;object-fit:cover}
+.journal-image{height:auto;aspect-ratio:1.8;overflow:hidden}
+.journal-image img{width:100%;height:100%;object-fit:cover}
+/* The thin copper outline remains, but the bright leading stroke/trail vanishes. */
+.house-intro__glowing-stroke,.house-intro__sharp-stroke{
+ animation:house-glow 2.65s linear .15s both,house-light-tail-exit .28s ease 2.82s forwards;
+}
+@keyframes house-light-tail-exit{0%{opacity:1}100%{opacity:0;visibility:hidden}}
+.house-intro__headlight{animation:house-light-visible 2.7s linear .15s both}
+@media(max-width:980px){
+ .hero{height:clamp(480px,58vw,610px)}
+ .hero-copy{width:43%;top:12%}
+ .hero-copy h1{font-size:clamp(28px,3.5vw,40px)}
+ .category-photo{height:auto;aspect-ratio:4/3}
+ .product-image{height:auto;aspect-ratio:1.45}
+ .collection-card{height:390px}
+}
+@media(max-width:700px){
+ .site-header{height:68px}
+ .header-inner{display:grid;grid-template-columns:40px minmax(0,1fr) auto;gap:9px;direction:rtl;width:calc(100% - 28px)}
+ .header-inner>.mobile-toggle--leading{display:grid;grid-column:1;grid-row:1;place-items:center;justify-self:start;width:39px;height:39px;border-radius:11px;background:#e9dbcf}
+ .header-inner>.brand{grid-column:2;grid-row:1;justify-self:center;font-size:clamp(18px,5.4vw,23px)}
+ .header-inner>.header-tools{grid-column:3;grid-row:1;justify-self:end;gap:5px;direction:ltr}
+ .header-tools button{width:34px;height:34px}
+ .hero{height:clamp(750px,104svh,910px);min-height:0;max-height:none}
+ .hero-picture img{object-position:center top}
+ .hero-copy{top:5.5%;bottom:auto;right:5.5%;width:89%;max-width:none;text-align:right;z-index:2}
+ .hero-kicker{font-size:11px;gap:9px}
+ .tiny-rule{width:24px}
+ .hero-copy h1{font-size:clamp(25px,7.2vw,36px);line-height:1.46;letter-spacing:-.4px;margin:13px 0 10px}
+ .hero-copy p{font-size:11px;line-height:1.95;margin:0 0 13px;max-width:94%;color:#624a3a}
+ .hero-copy .solid-btn{padding:11px 16px;font-size:11px;min-height:41px;white-space:normal}
+ .category-photo{height:auto;aspect-ratio:1.18}
+ .product-image{height:auto;aspect-ratio:1.42}
+ .collection-card{height:440px;min-height:0}
+ .space-img{height:auto;aspect-ratio:1.32}
+ .about-photo{height:auto;aspect-ratio:1.36}
+ .journal-image{height:auto;aspect-ratio:1.55}
+ .section{padding-top:clamp(66px,13vw,85px);padding-bottom:18px}
+ .category-caption{min-height:59px}
+ .mobile-drawer{right:0;left:auto}
+}
+@media(max-width:400px){
+ .hero{height:clamp(755px,109svh,885px)}
+ .hero-copy{top:4.7%}
+ .hero-copy h1{font-size:clamp(23px,7vw,29px);line-height:1.42;margin:11px 0 8px}
+ .hero-copy p{font-size:10px;line-height:1.8;margin-bottom:11px}
+ .hero-copy .solid-btn{font-size:10px;padding:10px 13px}
+ .header-inner>.brand{gap:4px;font-size:19px}
+ .brand-icon{height:29px;width:29px}
+}
+@media(prefers-reduced-motion:reduce){.hero-picture img{transform:none!important}}
+/* A soft legibility veil follows the type only; the underlying hero stays one
+   complete photograph, with its own built-in ivory curve. */
+@media(min-width:701px){
+ .hero-copy{isolation:isolate}
+ .hero-copy:before{
+   display:block!important;content:"";position:absolute;z-index:-1;pointer-events:none;
+   inset:-14px -10px -20px -30px;
+   background:linear-gradient(90deg,rgba(247,241,235,0) 0%,rgba(247,241,235,.65) 28%,rgba(247,241,235,.82) 65%,rgba(247,241,235,.8) 100%);
+   filter:blur(15px);border-radius:30px;
+ }
+}
+@media(max-width:700px){.hero-copy:before{display:none!important}}
