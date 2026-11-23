@@ -69,13 +69,13 @@ export default function HouseWoodHome(){
    if(!ready||!mainRef.current||window.matchMedia("(prefers-reduced-motion: reduce)").matches)return;
    gsap.registerPlugin(ScrollTrigger);
    const ctx=gsap.context(()=>{
-     gsap.fromTo(".hero-copy>*",{autoAlpha:0,y:28},{autoAlpha:1,y:0,duration:1,stagger:.13,ease:"power3.out",delay:.15});
-     gsap.fromTo(".service-strip",{autoAlpha:0,y:25},{autoAlpha:1,y:0,duration:.85,ease:"power3.out",delay:.6});
+     gsap.fromTo(".hero-copy>*",{opacity:.65,y:22},{opacity:1,y:0,duration:1,stagger:.13,ease:"power3.out",delay:.15});
+     gsap.fromTo(".service-strip",{opacity:.72,y:19},{opacity:1,y:0,duration:.85,ease:"power3.out",delay:.6});
      gsap.utils.toArray<HTMLElement>("[data-reveal]").forEach((el)=>{
-       gsap.fromTo(el,{autoAlpha:0,y:38},{autoAlpha:1,y:0,duration:.83,ease:"power3.out",scrollTrigger:{trigger:el,start:"top 90%",once:true}});
+       gsap.fromTo(el,{opacity:.83,y:24},{opacity:1,y:0,duration:.83,ease:"power3.out",scrollTrigger:{trigger:el,start:"top 90%",once:true}});
      });
      gsap.utils.toArray<HTMLElement>("[data-stagger]").forEach((grid)=>{
-       gsap.fromTo([...grid.children],{autoAlpha:0,y:35},{autoAlpha:1,y:0,duration:.72,stagger:.1,ease:"power3.out",scrollTrigger:{trigger:grid,start:"top 89%",once:true}});
+       gsap.fromTo([...grid.children],{opacity:.88,y:18},{opacity:1,y:0,duration:.72,stagger:.1,ease:"power3.out",scrollTrigger:{trigger:grid,start:"top 89%",once:true}});
      });
      gsap.utils.toArray<HTMLElement>("[data-parallax]").forEach((el)=>{
        gsap.fromTo(el,{y:-16,scale:1.04},{y:16,scale:1.04,ease:"none",scrollTrigger:{trigger:el.parentElement,start:"top bottom",end:"bottom top",scrub:1.3}})
