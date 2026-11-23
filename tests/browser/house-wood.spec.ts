@@ -10,8 +10,8 @@ test("Persian home, images, cart, mobile menu, no horizontal overflow",async({pa
  await expect(page.getByRole("dialog",{name:"سبد خرید"})).toBeVisible();
  await page.getByRole("button",{name:"بستن سبد"}).click();
  const mobile=testInfo.project.name.includes("mobile");
- if(mobile){await page.getByRole("button",{name:"باز کردن منوی موبایل"}).click();await expect(page.getByRole("navigation",{name:"لینک‌های موبایل"})).toBeVisible();await page.getByRole("button",{name:"بستن منو"}).click();}
- const wrong=await page.locator("img").evaluateAll(els=>els.filter(img=>img instanceof HTMLImageElement && img.complete && img.naturalWidth===0).map(img=>img.getAttribute('src')));
+ if(mobile){const menuBtn=page.getByRole("button",{name:"باز کردن منوی موبایل"}); const btn=await menuBtn.boundingBox();const brand=await page.locator(".header-inner>.brand").boundingBox();expect(btn).not.toBeNull();expect(brand).not.toBeNull();expect(btn!.x).toBeGreaterThan(brand!.x); const heroCopy=await page.locator(".hero-copy").boundingBox();const img=await page.locator(".hero-picture").boundingBox();expect(heroCopy!.y).toBeLessThan(img!.y+img!.height*.48);await menuBtn.click();await expect(page.getByRole("navigation",{name:"لینک‌های موبایل"})).toBeVisible();await page.getByRole("button",{name:"بستن منو"}).click();}
+ const wrong=await page.locator("img").evaluateAll(els=>els.filter(img=>img instanceof HTMLImageElement && img.complete&&img.naturalWidth===0).map(img=>img.getAttribute('src')));
  expect(wrong).toEqual([]);
  const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-window.innerWidth);
  expect(overflow).toBeLessThanOrEqual(1);

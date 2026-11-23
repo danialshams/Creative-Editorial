@@ -8,7 +8,7 @@ export default function HouseLightIntro({ onComplete }: { onComplete: () => void
   useEffect(() => {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     let already = false;
-    try { already = sessionStorage.getItem("khaneh-choob-intro-v1") === "done"; } catch {}
+    try { already = sessionStorage.getItem("khaneh-choob-intro-v2") === "done"; } catch {}
     if (already || reduced) {
       const t = window.setTimeout(onComplete, 80);
       return () => window.clearTimeout(t);
@@ -17,7 +17,7 @@ export default function HouseLightIntro({ onComplete }: { onComplete: () => void
     const hero = new Image(); hero.src = "/images/hero-scene.webp";
     const exit = window.setTimeout(() => setExiting(true), 3220);
     const done = window.setTimeout(() => {
-      try { sessionStorage.setItem("khaneh-choob-intro-v1", "done"); } catch {}
+      try { sessionStorage.setItem("khaneh-choob-intro-v2", "done"); } catch {}
       onComplete();
     }, 3880);
     return () => {window.clearTimeout(exit); window.clearTimeout(done);};
