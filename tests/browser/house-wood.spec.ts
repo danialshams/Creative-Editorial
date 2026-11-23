@@ -11,7 +11,7 @@ test("Persian home, images, cart, mobile menu, no horizontal overflow",async({pa
  await page.getByRole("button",{name:"بستن سبد"}).click();
  const mobile=testInfo.project.name.includes("mobile");
  if(mobile){await page.getByRole("button",{name:"باز کردن منوی موبایل"}).click();await expect(page.getByRole("navigation",{name:"لینک‌های موبایل"})).toBeVisible();await page.getByRole("button",{name:"بستن منو"}).click();}
- const wrong=await page.locator("img").evaluateAll(els=>els.filter(img=>img.complete&&img.naturalWidth===0).map(img=>img.getAttribute('src')));
+ const wrong=await page.locator("img").evaluateAll(els=>els.filter(img=>img instanceof HTMLImageElement && img.complete && img.naturalWidth===0).map(img=>img.getAttribute('src')));
  expect(wrong).toEqual([]);
  const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-window.innerWidth);
  expect(overflow).toBeLessThanOrEqual(1);
